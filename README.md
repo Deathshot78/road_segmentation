@@ -3,10 +3,10 @@
 
 # 🛰️ End-to-End Deep Learning Pipeline for Road Network Extraction from Satellite Imagery
 
-This project implements a complete, state-of-the-art deep learning pipeline for **semantic segmentation of road networks** from high-resolution satellite imagery. Using the **SpaceNet Roads Challenge dataset**, this work goes beyond a simple model implementation to tackle the complex, real-world challenges of **geospatial data processing, model optimization, and advanced post-processing** to generate clean, connected road graphs.
+This project implements a complete, state-of-the-art deep learning pipeline for **semantic segmentation of road networks** from high-resolution satellite imagery. Using the **SpaceNet Roads Challenge dataset**, this work goes beyond a simple model implementation to tackle the complex, real-world challenges of **geospatial data processing, model optimization, and post-processing** to generate clean, connected road graphs.
 
 ✅ The final model achieves a validation **IoU of ~0.60**, demonstrating strong performance in identifying road pixels.  
-🛠️ More importantly, the project includes a **post-processing pipeline** to convert raw pixel-level predictions into a **topologically coherent road network**, suitable for real-world applications.
+🛠️ More importantly, the project includes a **post-processing pipeline** to convert raw pixel-level predictions into a **coherent road network**, suitable for real-world applications.
 
 ![Results](assets/results.png)
 
@@ -18,7 +18,7 @@ This project implements a complete, state-of-the-art deep learning pipeline for 
 - [🔎 The Journey: From a Failing Model to a Robust Pipeline](#-the-journey-from-a-failing-model-to-a-robust-pipeline)
   - [1. The Data Alignment Bug: What Worked](#1-the-data-alignment-bug-what-worked)
   - [2. Model & Training Optimization: What Worked and What Didn't](#2-model--training-optimization-what-worked-and-what-didnt)
-  - [3. Advanced Post-Processing](#3-advanced-post-processing)
+  - [3. Post-Processing](#3-post-processing)
 - [🤼‍♂️ The Struggles](#️-the-struggles)
 - [🛠️ Future Work](#️-future-work)
 - [📁 Repository Structure](#-repository-structure)
@@ -88,17 +88,14 @@ With data fixed, the focus moved to **model architecture and training**.
 
 ---
 
-### 3. Advanced Post-Processing
+### 3. Post-Processing
 
 The raw U-Net predictions contained **gaps and noise**.  
-The solution: a **multi-step refinement pipeline**.
+The solution: a **multi-step refinement pipeline**. although it doesn't fix the gap problem completely it fixes some small gaps.
+I need to mention that in the first draft of my Post Processing workflow i included more steps such as Skeletonization, gap connect threshold, min_road_length but my experiments showed that a simple 2 step post processing function worked better
 
 1. Morphological Closing → fills small breaks.  
-2. Small Object Removal → removes noise.  
-3. Skeletonization → reduces to 1-pixel-wide centerlines.  
-4. Graph Refinement → builds a graph with `sknw` to **connect gaps** and prune spurs.  
-
-➡️ Final result: a **clean, topologically valid road network**.
+2. Small Object Removal → removes noise.
 
 ---
 
